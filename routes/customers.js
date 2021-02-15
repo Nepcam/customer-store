@@ -54,18 +54,65 @@ router.post(
   }
 );
 
-// @route   PUT api/customers/:id
-// @desc    Update customers
-// @access  Private
-router.put('/:id', (req, res) => {
-  res.send('Update customers')
+// @route    PUT api/customers/:id
+// @desc     Update a customer
+// @access   Private
+router.put('/:id', auth, async (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty())
+		return res.status(400).json({ errors: errors.array() });
+
+	const { name, email, phone, type } = req.body;
+
+	// Build customer object
+	const customerFields = {};
+	if (name) customerFields.name = name;
+	if (email) customerFields.email = email;
+	if (phone) customerFields.phone = phone;
+	if (type) customerFields.type = type;
+
+	try {
+		let customer = await Customer.findById(req.params.id);
+
+		if (!customer) return res.status(404).json({ msg: 'Customer not found' });
+
+		// Make sure user owns customer
+		if (customer.user.toString() !== req.user.id)
+			return res.status(401).json({ msg: 'Not authorized' });
+
+		customer = await Customer.findByIdAndUpdate(
+			req.params.id,
+			{ $set: customerFields },
+			{ new: true }
+		);
+
+		res.json(customer);
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	}
 });
 
-// @route   DELETE api/customers
-// @desc    Delete customers
-// @access  Private
-router.delete('/:id', (req, res) => {
-  res.send('Delete customer')
+// @route    DELETE api/customers/:id
+// @desc     Delete a customer
+// @access   Private
+router.delete('/:id', auth, async (req, res) => {
+	try {
+		const customer = await Customer.findById(req.params.id);
+
+		if (!customer) return res.status(404).json({ msg: 'Customer not found' });
+
+		// Make sure user owns contact
+		if (customer.user.toString() !== req.user.id)
+			return res.status(401).json({ msg: 'Not authorised' });
+
+		await Customer.findByIdAndRemove(req.params.id);
+
+		res.json({ msg: 'Customer removed' });
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	}
 });
 
 module.exports = router;

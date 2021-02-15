@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://cam123:cam123@customerstore.dwmzw.mongodb.net/<dbname>?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://cam123:cam123@customerstore.dwmzw.mongodb.net/<dbname>?retryWrites=true&w=majority",
+  "jwtSecret": "secret"
 }

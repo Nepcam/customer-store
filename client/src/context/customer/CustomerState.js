@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import uuid from 'uuid';
-import customerContext from './customerContext'
+import CustomerContext from './customerContext'
 import customerReducer from './customerReducer'
 import {
   ADD_CUSTOMER,
@@ -17,8 +17,8 @@ const CustomerState = props => {
     customers: [
       {
         id: 1,
-        name: 'Jill Johnson',
-        email: 'jill@gmail.com',
+        name: 'Pae Jaram',
+        email: 'pae@gmail.com',
         phone: '111-111-1111',
         type: 'personal'
       },
@@ -50,13 +50,13 @@ const CustomerState = props => {
   // Clear Filter
 
   return (
-    <customerContext.Provider
+    <CustomerContext.Provider
       value={{
         customers: state.customers
       }}
     >
       { props.children }
-    </customerContext.Provider>
+    </CustomerContext.Provider>
   );
 };
 

@@ -1,9 +1,15 @@
 import React from 'react'
+import Customers from '../customers/Customers';
 
 export const Home = () => {
   return (
-    <div>
-      <h1>Home</h1>
+    <div className="grid-2">
+      <div>
+        {/* CustomerForm */}
+      </div>
+      <div>
+        <Customers />
+      </div>
     </div>
   )
 };
